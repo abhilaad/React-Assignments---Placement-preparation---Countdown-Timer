@@ -1,85 +1,41 @@
 import React, { Component, useState, useEffect } from "react";
-import '../styles/App.css';
+import "../styles/App.css";
 
-const App = () => {
-  // write your code here 
-  let [counter, setCount] = useState(0);
- 
-  let yo;
-  let z = 0;
-  let interval;
- 
-  let y = () =>{
-   
-    interval = setInterval(() => {
-      console.log(counter + "inside");
-      
-      setCount(counter--);
-        
-      if (counter < 0 || counter == "NaN") {
-        clearInterval(interval);
-        
-      }
-    }, 1000);
-    console.log(interval + "  yuuooiii")
-    
-    
-  }
+export default function App() {
+  const [currentTime, setCurrentTime] = useState(0);
 
-            
-      useEffect(
-        ()=>{
-          
-          console.log("effected")
-        return () => {clearInterval(interval); };
-        },[interval]
-      )
-     
-    
-    
- 
-  const onKeyPressed = (e)=> {
-    
-     yo = Number(e.key);
-     if(typeof(yo)=="number" && !Number.isNaN(yo)){
-      setCount(counter= counter?counter.toString()+yo.toString() : yo);
+  const reverseCount = (event, inputValue) => {
+    if (event.keyCode !== 13) return;
+    inputValue = Math.floor(inputValue);
+    if (inputValue < 0) {
+      inputValue = 0;
+    }
 
-      
-      console.log(counter);  
-       
+    setCurrentTime(inputValue);
+  };
 
-       }
-       if(e.key=="Enter"){
-         
-         y()
-       
-       }
-
-     else console.log("elseeee");
-     
-
-     } 
-     let changes = (e)=>{
-      setCount(e.target.value); 
-    
-      
-    
-  }
-  
+  useEffect(() => {
+    let id = null;
+    if (currentTime > 0) {
+      id = setInterval(() => setCurrentTime(currentTime - 1), 1000);
+    }
+    return () => clearInterval(id);
+  });
 
   return (
-    <div className="wrapper">   HI
+    <div className="wrapper">
       <div id="whole-center">
         <h1>
-          Reverse countdown for<input id="timeCount" onKeyDown={onKeyPressed} onChange={changes} /> sec.
+          Reverse countdown for
+          <input
+            id="timeCount"
+            type="number"
+            onKeyDown={(e) => reverseCount(e, e.target.value)}
+          />{" "}
+          sec.
         </h1>
       </div>
-      <div id="current-time">{counter?counter:z}</div>
+      <div id="current-time">{currentTime}</div>
     </div>
-  )
+  );
 }
-
-export default App;
-
-
-
